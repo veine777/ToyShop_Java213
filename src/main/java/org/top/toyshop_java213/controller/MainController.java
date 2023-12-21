@@ -12,7 +12,6 @@ public class MainController {
         return "index";
     }
 
-
     @PostMapping("")
     public String postIndex() {
         return "redirect:/";
