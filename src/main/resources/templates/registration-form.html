@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head-login"></head>
+<body style="padding-top: 0;">
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='index')"/>
+
+<div class="content container">
+    <form class="form-signin" method="post" th:action="@{/user/register}" th:object="${userRegistrationForm}">
+        <h2 class="form-signin-heading">Make registration now</h2>
+        <p>
+            <label for="login" class="sr-only">Login</label>
+            <input type="text" id="login" th:field="*{login}" class="form-control" placeholder="Username"
+                   required autofocus minlength="1">
+        </p>
+        <p>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Password"
+                   required>
+        </p>
+        <p>
+            <label for="password-confirmation" class="sr-only">Password</label>
+            <input type="password" id="password-confirmation" th:field="*{passwordConfirmation}"
+                   class="form-control" placeholder="Password confirmation" required>
+        </p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+    <!-- вывод сообщения success message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

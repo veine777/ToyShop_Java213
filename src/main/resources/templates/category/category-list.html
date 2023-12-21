@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='category')"/>
+
+<!-- верстка с использованием bootstrap -->
+<div class="content container-fluid text-center">
+
+    <!-- вывод сообщения success message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- вывод списка категорий через цикл (используется таблица-->
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Наименование</th>
+            <th>Описание</th>
+            <th sec:authorize="hasRole('ADMIN')">Действие</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="category: ${categories}">
+            <td>[[${category.id}]]</td>
+            <td>[[${category.title}]]</td>
+            <td>[[${category.description}]]</td>
+            <!-- ячейка действия -->
+            <td sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{'/category/delete/' + ${category.id}}" class="btn btn-danger">Удалить</a>
+                <a th:href="@{'/category/update/' + ${category.id}}" class="btn btn-primary">Изменить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a sec:authorize="hasRole('ADMIN')" class="btn btn-warning form-control" th:href="@{/category/new}">
+        Добавить новую категорию
+    </a>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

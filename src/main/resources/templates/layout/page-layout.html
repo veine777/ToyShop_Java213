@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Page-Layout</title>
+</head>
+<body>
+<!-- данные файл содержит фрагменты, описывающие компоненты верстки страницы (header, footer, e.t.c.) -->
+
+<!-- фрагмент общего содержимого тега head -->
+<th:block th:fragment="page-head">
+    <meta charset="UTF-8">
+    <title>Toy Shop</title>
+    <!-- подключения локального bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- стили для sticky footer -->
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
+    </style>
+</th:block>
+
+<!-- фрагмент содержимого тега head для login-a -->
+<th:block th:fragment="page-head-login">
+    <meta charset="UTF-8">
+    <title>Please sign in</title>
+    <!-- подключения локального bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <!-- стили для sticky footer -->
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
+    </style>
+</th:block>
+
+
+<!-- компонент шапки приложения -->
+<header th:fragment="page-header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success text-light mb-1">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">Toy Shop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" aria-current="page" th:classappend="${page == 'index'? 'active' : ''}"
+                       th:href="@{/}">Главная</a>
+                    <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/category}"
+                       th:classappend="${page == 'category'? 'active' : ''}">Категория</a>
+                    <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/product}"
+                       th:classappend="${page == 'product'? 'active' : ''}">Товар</a>
+                    <a sec:authorize="hasRole('USER')" class="nav-link" th:href="@{/order}"
+                       th:classappend="${page == 'order'? 'active' : ''}">Заказ</a>
+                </div>
+            </div>
+            <!-- кнопки аутентификации и авторизации и вывод информации о сессии пользователя -->
+            <span sec:authorize="isAuthenticated()">[[${#authentication.getPrincipal().getUsername()}]]</span>
+            <form sec:authorize="isAuthenticated()" class="d-flex" method="post" th:action="@{/logout}">
+                <button class="btn btn-outline-warning">Выйти</button>
+            </form>
+            <form sec:authorize="!isAuthenticated()" class="d-flex" method="get" th:action="@{/login}">
+                <button class="btn btn-outline-warning">Авторизоваться</button>
+            </form>
+            <form sec:authorize="!isAuthenticated()" class="d-flex" method="get" th:action="@{/user/register}">
+                <button class="btn btn-outline-warning">Зарегистрироваться</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<!-- фрагмент вывода сообщений dangerMessage/successMessage -->
+<th:block th:fragment="page-message">
+    <!-- вывод сообщения success message -->
+    <p class="alert alert-success" th:if="${successMessage != null}">
+        [[${successMessage}]]
+    </p>
+
+    <!-- вывод сообщения danger message -->
+    <p class="alert alert-danger" th:if="${dangerMessage != null}">
+        [[${dangerMessage}]]
+    </p>
+</th:block>
+
+<!-- футер приложения -->
+<div class="flex-shrink-0">
+    <footer th:fragment="page-footer" class="footer text-center text-bg-success">
+        <div class="container">
+            <h4>Developed by M.Sholomotskaya &copy;</h4>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

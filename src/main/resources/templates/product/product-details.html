@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='product')"/>
+
+<!-- верстка с использованием bootstrap -->
+<div class="content container-fluid text-center">
+
+    <h2>Описание товара: [[${product.title}]]</h2>
+    <table class="table table-bordered">
+        <!-- тело таблицы -->
+        <tbody>
+        <tr>
+            <th>ID:</th>
+            <td>[[${product.id}]]</td>
+        </tr>
+        <tr>
+            <th>Предварительный просмотр:</th>
+            <td th:if="${product.previewImageData != null}">
+                <img th:src="@{'data:image/jpeg;base64,' + ${product.previewImageData}}" width="250" height="250">
+            </td>
+            <td th:if="${product.previewImageData == null}"> -</td>
+        </tr>
+        <tr>
+            <th>Наименование:</th>
+            <td>[[${product.title}]]</td>
+        </tr>
+        <tr>
+            <th>Описание:</th>
+            <td>[[${product.description}]]</td>
+        </tr>
+        <tr>
+            <th>Цена, руб:</th>
+            <td>[[${product.price}]]</td>
+        </tr>
+        <tr>
+            <th>Наличие на складе:</th>
+            <td>
+                <span th:if="${product.getAvailable()}" class="text-success">Есть в наличие</span>
+                <span th:if="${!product.getAvailable()}" class="text-danger">Нет в наличие</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Категория:</th>
+            <td>
+                    <span th:if="${product.productCategorySet.isEmpty()}">
+                        Нет категорий для данного товара
+                    </span>
+                <span th:each="productCategory: ${product.productCategorySet}">
+                        [[${productCategory.category.title}]];
+                    </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- вывод сообщения success message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- форма добавления категории -->
+    <form method="post" th:action="@{'/product/' + ${product.id} + '/add-category'}" th:object="${productCategory}">
+        <div class="mb-3 row">
+            <input th:field="*{id}" hidden/>
+            <label class="col-sm-2 col-form-label" for="category">Категория: </label>
+            <div class="col-sm-8">
+                <select class="form-select" id="category" th:field="*{category}">
+                    <option th:each="category: ${categories}" th:value="${category.id}">
+                        [[${category.title}]] ([[${category.description}]])
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-success form-control">Сохранить</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- кнопка перехода на список товаров -->
+<div class="content">
+    <div class="text-center">
+        <div class="row">
+            <a class="btn btn-success form-control" th:href="@{/product}">К списку товаров</a>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="text-center">
+        <h2>Отзывы о товаре</h2>
+        <div th:each="review: ${product.reviewSet}">
+            <h3>[[${review.reviewRate}]] / 10</h3>
+            <p>[[${review.comment}]]</p>
+            <h3>[[${writtenIn}]]</h3>
+        </div>
+        <a th:href="@{'/review/new/'+ ${product.id}}">Добавить новый отзыв</a>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

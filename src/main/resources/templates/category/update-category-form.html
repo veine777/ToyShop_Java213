@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='category')"/>
+
+<!-- верстка с использованием bootstrap -->
+<div class="content container-fluid text-center">
+    <h1>Update category</h1>
+
+    <div class="container-sm align-content-center text-center">
+        <form method="post" th:action="@{/category/update}" th:object="${category}">
+            <!-- id (пример с полем только для чтения) -->
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="id">ID: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="number" id="id" th:field="*{id}" readonly/>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="title">Наименование: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" id="title" required minlength="1" th:field="*{title}"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="description">Описание: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" id="description" required minlength="1"
+                           th:field="*{description}"/>
+                </div>
+            </div>
+
+            <!-- кнопка отправки формы -->
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
+                    <button class="btn btn-success form-control">Сохранить</button>
+                </div>
+                <div class="col-sm-5">
+                    <a class="btn btn-danger form-control" th:href="@{/category}">Отменить</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

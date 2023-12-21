@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='order')"/>
+
+<div class="content text-center">
+
+    <!-- вывод заказа, который формируется -->
+    <h2>Текущий заказ</h2>
+
+    <h3 th:if="${notCompletedOrder == null}">Нет заказов</h3>
+
+    <div th:if="${notCompletedOrder != null}">
+        <table class="table table-bordered">
+            <!-- шапка таблицы -->
+            <thead class="table-dark">
+            <tr>
+                <th>Товар</th>
+                <th>Цена</th>
+                <th>Наличие</th>
+                <th>Добавить/Удалить</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderProduct: ${notCompletedOrder.orderProductSet}">
+                <th>[[${orderProduct.product.title}]]</th>
+                <th>[[${orderProduct.product.price}]]</th>
+                <td>[[${orderProduct.quantity}]]</td>
+                <td>
+                    <a th:href="@{'/order/add-unit/' + ${orderProduct.id}}" class="btn btn-success">+</a>
+                    <a th:href="@{'/order/remove-unit/' + ${orderProduct.id}}" class="btn btn-danger">-</a>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Общая сумма заказа</th>
+                <td>[[${total}]]</td>
+                <td colspan="2">
+                    <a th:href="@{'/order/complete/' + ${notCompletedOrder.id}}" class="btn btn-success">Сформировать заказ</a>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- сформированные заказы -->
+    <h2>Сформированные заказы</h2>
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Выполнен</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="order: ${completedOrders}">
+            <td>[[${order.id}]]</td>
+            <td>[[${order.completedAt}]]</td>
+            <!-- ячейка действия -->
+            <td>
+                Сформирован
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

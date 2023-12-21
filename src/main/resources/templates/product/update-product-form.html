@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='product')"/>
+
+<!-- верстка с использованием bootstrap -->
+<div class="content container-fluid text-center">
+    <h1>Изменить товар</h1>
+
+    <div class="container-sm align-content-center text-center">
+        <form method="post" th:action="@{/product/update}" th:object="${product}" enctype="multipart/form-data">
+            <!-- id (пример с полем только для чтения) -->
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="id">ID: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="number" id="id" th:field="*{id}" readonly/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="title">Наименование: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" id="title" required minlength="1" th:field="*{title}"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="description">Описание: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" id="description" required minlength="1"
+                           th:field="*{description}"/>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="price">Price: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="number" step="any" id="price" required th:field="*{price}"/>
+                </div>
+            </div>
+
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="is-available">Наличие: </label>
+                <div class="col-sm-1">
+                    <input class="form-check-input" type="checkbox" id="is-available" th:field="*{available}"/>
+                </div>
+                <div class="col-sm-9"></div>
+            </div>
+
+            <!-- превью товара -->
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label" for="preview">Предварительный просмотр: </label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="file" name="previewImage" id="preview"/>
+                </div>
+            </div>
+
+            <!-- кнопка отправки формы -->
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
+                    <button class="btn btn-success form-control">Сохранить</button>
+                </div>
+                <div class="col-sm-5">
+                    <a class="btn btn-danger form-control" th:href="@{/product}">Отменить</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

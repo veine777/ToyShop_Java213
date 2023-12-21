@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='product')"/>
+
+<!-- верстка с использованием bootstrap -->
+<div class="content container-fluid text-center">
+
+    <!-- вывод сообщения success message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- форма для фильтрации товаров -->
+    <div class="container-sm align-content-center text-center m-1">
+        <form method="get" th:action="@{/product}" class="row col-sm-12" th:object="${filter}">
+            <label class="col-sm-2 col-form-label" for="product">Товар: </label>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" id="product" th:field="*{product}"/>
+            </div>
+
+            <label class="col-sm-2 col-form-label" for="min-price">Min/Max Цена: </label>
+            <div class="col-sm-1">
+                <input class="form-control" type="number" step="any" id="min-price" th:field="*{minPrice}"/>
+            </div>
+
+            <div class="col-sm-1">
+                <input class="form-control" type="number" step="any" id="max-price" th:field="*{maxPrice}"/>
+            </div>
+
+            <!-- кнопка отправки формы -->
+            <div class="col-sm-3">
+                <button class="btn btn-success form-control">Сохранить</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- вывод списка отелей через цикл (используется таблица-->
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Наименование</th>
+            <th>Описание</th>
+            <th>Цена, руб</th>
+            <th>Наличие на складе</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="product: ${products}">
+            <td>[[${product.id}]]</td>
+            <td>[[${product.title}]]</td>
+            <td>[[${product.description}]]</td>
+            <td>[[${product.price}]]</td>
+            <td>
+                <span th:if="${product.getAvailable()}" class="text-success">Есть в наличие</span>
+                <span th:if="${!product.getAvailable()}" class="text-danger">Нет в наличие</span>
+            </td>
+            <!-- ячейка действия -->
+            <td>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{'/product/delete/' + ${product.id}}"
+                   class="btn btn-danger">Удалить</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{'/product/update/' + ${product.id}}"
+                   class="btn btn-primary">Изменить</a>
+                <a th:href="@{'/product/' + ${product.id}}" class="btn btn-warning">Описание</a>
+                <a sec:authorize="hasRole('USER')"
+                   th:href="@{'/order/buy/' + ${product.id}}"
+                   class="btn btn-primary">
+                    Купить
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a sec:authorize="hasRole('ADMIN')" class="btn btn-success form-control" th:href="@{/product/new}">
+        Добавить новый товар
+    </a>
+</div>
+
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>
